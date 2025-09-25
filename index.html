@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pieces Commerciales</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style type="text/tailwindcss" lang="postcss">
+        h1 {
+            @apply font-medium text-blue-400 m-2;
+        }
+        .btn3 {
+            @apply  px-4 py-2 m-4 text-sm font-medium mt-8 text-blue-900 bg-blue-100 rounded-md cursor-pointer hover:bg-blue-400
+        }
+        .sdk {
+            @apply cursor-pointer hover:bg-blue-100 rounded-md odd:bg-gray-100 even:bg-white;
+        }
+        th {
+            @apply border border-gray-300;
+        }
+        .nbre {
+            @apply       p-2 border border-gray-200  text-right rounded-md ;
+        }
+        .article {
+            @apply w-86  p-2 border border-gray-200 rounded-md ;
+        }
+        .montant {    
+            @apply  w-35 p-2 border border-gray-200 text-right rounded-md  ;
+        }
+        .prix {
+            @apply w-25 p-2 border border-gray-200 text-right rounded-md ;
+        }
+        .quantite {
+            @apply w-18 p-2 border border-gray-200 text-right rounded-md ;
+        }
+        .totaux {
+            @apply          border border-gray-200 text-right rounded-md ;
+        }
+        .table-grille {
+            @apply border-separate border-spacing-2 border-collapse border border-gray-400 rounded-md;
+        }
+        .label {
+            @apply inline-block mb-2 text-gray-700;
+        }
+        .cl {
+            @apply block w-full px-3 py-1.5 text-base font-normal text-gray-700
+            bg-white bg-clip-padding border border-solid border-gray-400  rounded
+            transition ease-in-out m-0 focus:text-gray-700 focus:bg-white 
+            focus:border-blue-600 focus:outline-none ;
+        }
+        .entete-piece {
+            @apply w-183 p-2 border border-gray-200 rounded-md mb-3 ;
+        } 
+    </style>
+</head>
+
+<body>
+    <div x-data  class="w-183 m-8" >
+        <div class="entete-piece">
+            <form action="">
+                <div>
+                    <label for="npiece" class="form-label label">Num&egrave;ros:</label>
+                    <input id="npiece" name="npiece" type="text" placeholder="Numéro" class="form-control client">
+                    <select>
+                        <option value="1">Devis</option>
+                        <option value="2">Bon de Livraison</option>
+                        <option value="3">Facture</option>
+                        <option value="4">Avoir</option>
+                    </select>
+                    <input type="checkbox" name="piecevalide" id="piecevalide"> Valide
+                </div>
+                <div>
+                    <label for="datepiece" class="form-label label">Date:</label>
+                    <input id="datepiece" name="datepiece" type="date" placeholder="Date" class="form-control client">
+                </div>
+                <div>
+                    <label for="client" class="form-label label">Client:</label>
+                    <input id="client" name="client" type="text" placeholder="Client" class="form-control client">
+                </div>
+                <div>
+                    <label for="adresse" class="form-label label">Adresse:</label>
+                    <input id="adresse" name="adresse" type="text" placeholder="Adresse" class="form-control client">
+                </div>
+                <div>
+                    <label for="references" class="form-label label">References:</label><br>
+                    <textarea id="references" name="references" type="text" placeholder="References"
+                        class="form-control client ml-8">
+                    </textarea>
+                </div>
+            </form>
+        </div>
+        <table class="table-grille" x-data="objentete(3, 3000.00,600.00,3600.00)">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Article</th>
+                    <th scope="col">Qte</th>
+                    <th scope="col">PU</th>
+                    <th scope="col">Montant</th>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <hr><br>
+                    </td>
+                </tr>
+            </thead>
+            <tbody x-sort class="mb-10 scrollable-div" x-ref="corps" >
+                <tr>
+                <td colspan="5">
+                    <button  @click="$refs.corps.appendChild(newrow())">Append</button>
+                </td>
+                </tr>
+                
+                <template x-for="nbre in 3">
+                    <tr x-sort:item class="sdk" x-data="objline(nbre,'Article______________________'+nbre,1,1000)"
+                        x-html="sstd"></tr>
+                   
+                </template>
+            </tbody>
+            <tfoot class=" mb-4">
+                <tr>
+                    <td colspan="5">
+                        <br>
+                        <hr>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="totaux" colspan="4">Total TTC:</td>
+                    <td class="montant" x-text="sttc"></td>
+                </tr>
+                <tr>
+                    <td class="totaux" colspan="4">TVA 20%:</td>
+                    <td class="montant" x-text="stva"></td>
+                </tr>
+                <tr>
+                    <td class="totaux" colspan="4">Total HT:</td>
+                    <td class="montant" x-text="sht"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+
+</body>
+
+</html>

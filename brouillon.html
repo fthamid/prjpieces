@@ -1,0 +1,75 @@
+  <!-- <template x-for="nbre in 21">
+          
+                    <div class="bg-indigo-200 rounded-3xl flex justify-center items-center" x-text="nbre"></div>
+
+            </template> -->
+
+<!--
+            <tr>
+                <td class="totaux" colspan="4">Total TTC:</td>
+                <td class="montant" x-text="sttc"></td>
+            </tr>
+
+            <tr x-show="pieceremise">
+                <td class="totaux" colspan="4">Remise:</td>
+                <input id="remise" name="remise" type="text" placeholder="remise" xmodel="sremise" class="montant">
+            </tr>
+
+            <tr>
+                <td class="totaux" colspan="4">Net à Payer:</td>
+                <td class="montant" x-text="snet"></td>
+            </tr>
+            <tr>
+                <td class="totaux" colspan="4">TVA 20%:</td>
+                <td class="montant" x-text="stva"></td>
+            </tr>
+            <tr>
+                <td class="totaux" colspan="4">Total HT:</td>
+                <td class="montant" x-text="sht"></td>
+            </tr>
+            -->
+<!-- <tr>
+                <td colspan="5">
+                    <button class="btn3" @click="$refs.corps.appendChild(newrow())">+</button>
+                </td>
+            </tr> -->
+
+.label {
+@apply form-label inline-block mb-2 text-gray-700;
+}
+.cl {
+@apply form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700
+bg-white bg-clip-padding border border-solid border-gray-300 rounded
+transition ease-in-out m-0 focus:text-gray-700 focus:bg-white
+focus:border-blue-600 focus:outline-none ;
+}
+
+
+‘<tr x-sort:item class=\"sdk\" x-data=\"objline(\\'Article_______________________________\'+nbre,0,1000)">
+        <td class=\"nbre\" x-text=\"nbre\"></td>
+        <td><input type=\"text\" class=\"article\" x-model.lazy=\"article\"></td>
+        <td><input type=\"text\" class=\"quantite\" x-model.lazy=\"quantite\" onfocus=\"this.select();\"
+                        x-mask:dynamic=\"$money($input,\'.\',\' \',2)\">
+        </td>
+        <td><input type=\"text\" class=\"prix\" x-model.lazy=\"prix_u\" onfocus=\"this.select();\"
+                        x-mask:dynamic=\"$money($input,\'.\',\' \',2)\">
+        </td>
+        <td>
+                <input type=\"text\" class=\"montant\" x-model=\"smt\" disabled x-init=\"$watch(\'montant\',
+                        (value,oldvalue)=> updateTotaux(oldvalue,value))\">
+        </td>
+</tr>'
+
+sstr:‘<tr x-sort:item class=\"sdk\" x-data=\"objline(\'Article_______________________________\'+nbre,0,1000)\">
+        <td class=\"nbre\" x-text=\"nbre\"></td>
+        <td><input type=\"text\" class=\"article\" x-model.lazy=\"article\"></td>
+        <td><input type=\"text\" class=\"quantite\" x-model.lazy=\"quantite\" onfocus=\"this.select();\"
+                        x-mask:dynamic=\"$money($input,\'.\',\' \',2)\"></td>
+        <td><input type=\"text\" class=\"prix\" x-model.lazy=\"prix_u\" onfocus=\"this.select();\"
+                        x-mask:dynamic=\"$money($input,\'.\',\' \',2)\"></td>
+        <td><input type=\"text\" class=\"montant\" x-model=\"smt\" disabled x-init=\"$watch(\'montant\',
+                        (value,oldvalue)=> updateTotaux(oldvalue,value))\"></td>
+</tr>',
+
+
+@click="$refs.corps.appendChild(document.createElement('tr'))"

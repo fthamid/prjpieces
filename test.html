@@ -1,0 +1,176 @@
+<div id="load" class="bg-gray-200" class="entete-piece" x-data="objentete(3, 0.00,0.00,0.00)">
+    <div class="flex h-screen w-full items-center justify-center  p-4">
+        <div class="grid h-full w-full grid-cols-9 grid-rows-10 gap-4">
+            <div id="llat" x-show="left_show" class="col-span-2 row-span-7 bg-indigo-200 rounded-3xl flex-col justify-between items-center p-4">
+        <!-- <div id="llat" class="bg-gray-200 p-2 m-2 rounded-md" x-show="left_show"> -->
+                <div class="bg-gray-200 p-1 ">
+                    <select id="typepiece" x-model="typepiece">
+                        <option value="1">Devis</option>
+                        <option value="2">Bon de Livraison</option>
+                        <option value="3">Facture</option>
+                        <option value="4">Avoir</option>
+                    </select>
+                </div><br>
+                <div class="bg-gray-200 p-1 "> 
+                    <label for="npiece" class="form-label label">Num&eacute;ro:</label>
+                    <input id="npiece" name="npiece" type="text" placeholder="Numéro" x-model.lazy="npiece"
+                        class="form-control cl bg-gray-100 p-2">
+                </div>
+                <div class="bg-gray-200 p-1 ">
+                    <label for="datepiece" class="form-label label">Date:</label>
+                    <input id="datepiece" name="datepiece" type="date" placeholder="Date"
+                        class="form-control cl  bg-gray-100 p-2">
+                </div>
+                <div class="bg-gray-200 p-1 ">
+                    <label for="client" class="form-label label">Client:</label>
+                    <input id="client" name="client" type="text" placeholder="Client" x-model.lazy="client"
+                        class="form-control cl bg-gray-100 p-2">
+                </div>
+                <div class="bg-gray-200 p-1 ">
+                    <label for="adresse" class="form-label label">Adresse:</label>
+                    <textarea cols="23" id="adresse" name="adresse" type="text" placeholder="Adresse" x-model.lazy="adresse"
+                        class="form-control cl bg-gray-100 p-2">
+                        </textarea>
+                </div>
+                <div class="bg-gray-200 p-1 ">
+                    <label for="references" class="form-label label">Ville:</label>
+                    <input id="ville" name="ville" type="text" placeholder="Ville" x-model.lazy="ville"
+                        class="form-control cl bg-gray-100 p-2">
+                </div>
+                <div class="bg-gray-200 p-1">
+                    <label for="references" class="form-label label">References:</label>
+                    <textarea cols="23" id="references" name="references" type="text" placeholder="References"
+                        x-model.lazy="references" class="form-control cl bg-gray-100 p-2">
+                        </textarea>
+                </div>
+        <!--</div> llat -->
+
+            </div>
+            <div id="clat" x-show="central_show" class=" row-span-6 bg-indigo-200 rounded-3xl flex-col justify-between items-center p-4">
+                <div class="bg-red-200 p-4 text-right">
+                    <label for="ht" class="form-label label font-bold">Total HT:</label>
+                    <input id="ht" name="ht" type="text" placeholder="HT" x-model.lazy="sht"
+                        class="cl bg-gray-200 p-4 text-right" readonly>
+                </div>
+                <div class="bg-red-200 p-4 text-right">
+                    <label for="tva" class="form-label label font-bold">TVA 20%:</label>
+                    <input id="tva" name="tva" type="text" placeholder="Tva" x-model.lazy="stva"
+                        class="cl bg-gray-200 p-4 text-right" readonly>
+                </div>
+                <div class=" bg-red-200 p-4 text-right">
+                    <label for="ttc" class="form-label label font-bold">TTC:</label>
+                    <input id="ttc" name="ttc" type="text" placeholder="TTC" x-model.lazy="sttc"
+                        class="cl bg-gray-200 p-4 text-right" readonly>
+                </div>
+                <div class="bg-red-200 p-4 text-right">
+                    <label for="remise" class="form-label label font-bold">Remise:</label>
+                    <input id="remise" name="remise" type="text" placeholder="Remise" x-model.lazy="remise"
+                        class="cl montant bg-red-500 p-4 text-right" x-init="$watch('lremise', () => updateNet())"
+                        x-mask:dynamic="$money($input,'.',' ',2)" />
+                </div>
+                <div class="bg-red-200 p-4 text-right">
+                    <label for="remise" class="form-label label font-bold">Net:</label>
+                    <input id="net" name="net" type="text" placeholder="Net" x-model.lazy="snet"
+                        class="cl bg-gray-200 p-4 text-right" readonly>
+                </div>
+            </div> <!-- clat -->
+             <div class="col-span-6 row-span-1 bg-indigo-200 rounded-3xl flex justify-center items-center" >
+                 <div>
+                    <button class="btn3" @click="$refs.corps.appendChild(newrow())">
+                        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" alt="Ajouter ligne">
+                            <g id="Table_Add">
+                                <path id="Vector"
+                                    d="M11 4H15.8002C16.9203 4 17.4801 4 17.9079 4.21799C18.2842 4.40973 18.5905 4.71547 18.7822 5.0918C19 5.5192 19 6.07899 19 7.19691V9.0002L11.0001 9.0001M11 4H6.2002C5.08009 4 4.51962 4 4.0918 4.21799C3.71547 4.40973 3.40973 4.71547 3.21799 5.0918C3 5.51962 3 6.08009 3 7.2002V9M11 4L11.0001 9.0001M3 9V15M3 9L11.0001 9.0001M3 15V16.8002C3 17.9203 3 18.4801 3.21799 18.9079C3.40973 19.2842 3.71547 19.5905 4.0918 19.7822C4.5192 20 5.07899 20 6.19691 20H11.0002L11.0001 9.0001M3 15H11M15 16H18M18 16H21M18 16V19M18 16V13"
+                                    stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </g>
+                        </svg>
+
+                    </button>
+                    <button class="btn3" @click="recalcul_piece()">
+                        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" alt="Recalcul"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 22H14C19 22 21 20 21 15V9C21 4 19 2 14 2H10C5 2 3 4 3 9V15C3 20 5 22 10 22Z"
+                                stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path
+                                d="M16.5 7.57996V8.57996C16.5 9.39996 15.83 10.08 15 10.08H9C8.18 10.08 7.5 9.40996 7.5 8.57996V7.57996C7.5 6.75996 8.17 6.07996 9 6.07996H15C15.83 6.07996 16.5 6.74996 16.5 7.57996Z"
+                                stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M8.13612 14H8.14767" stroke="#292D32" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M11.9952 14H12.0068" stroke="#292D32" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M15.8544 14H15.8659" stroke="#292D32" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M8.13612 17.5H8.14767" stroke="#292D32" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M11.9952 17.5H12.0068" stroke="#292D32" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M15.8544 17.5H15.8659" stroke="#292D32" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <button class="btn3" @click="left_show = ! left_show">
+                        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" x-show="left_show"
+                            alt="Fermer panneau Lateral" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M6 4C4.34315 4 3 5.34315 3 7V17C3 18.6569 4.34315 20 6 20H18C19.6569 20 21 18.6569 21 17V7C21 5.34315 19.6569 4 18 4H6ZM5 7C5 6.44772 5.44772 6 6 6H9V18H6C5.44772 18 5 17.5523 5 17V7ZM11 18H18C18.5523 18 19 17.5523 19 17V7C19 6.44772 18.5523 6 18 6H11V18Z"
+                                fill="#000000" />
+                        </svg>
+                        <svg fill="#000000" width="40px" height="40px" viewBox="0 0 56 56" x-show="!left_show"
+                            alt="Ouvrir panneau Lateral" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M 7.7148 49.5742 L 48.2852 49.5742 C 53.1836 49.5742 55.6446 47.1367 55.6446 42.3086 L 55.6446 13.6914 C 55.6446 8.8633 53.1836 6.4258 48.2852 6.4258 L 7.7148 6.4258 C 2.8398 6.4258 .3554 8.8398 .3554 13.6914 L .3554 42.3086 C .3554 47.1602 2.8398 49.5742 7.7148 49.5742 Z M 7.7851 45.8008 C 5.4413 45.8008 4.1288 44.5586 4.1288 42.1211 L 4.1288 13.8789 C 4.1288 11.4414 5.4413 10.1992 7.7851 10.1992 L 18.2148 10.1992 L 18.2148 45.8008 Z M 48.2147 10.1992 C 50.5350 10.1992 51.8708 11.4414 51.8708 13.8789 L 51.8708 42.1211 C 51.8708 44.5586 50.5350 45.8008 48.2147 45.8008 L 21.8944 45.8008 L 21.8944 10.1992 Z M 13.7148 18.8945 C 14.4179 18.8945 15.0507 18.2617 15.0507 17.5820 C 15.0507 16.8789 14.4179 16.2696 13.7148 16.2696 L 8.6757 16.2696 C 7.9726 16.2696 7.3632 16.8789 7.3632 17.5820 C 7.3632 18.2617 7.9726 18.8945 8.6757 18.8945 Z M 13.7148 24.9649 C 14.4179 24.9649 15.0507 24.3320 15.0507 23.6289 C 15.0507 22.9258 14.4179 22.3398 13.7148 22.3398 L 8.6757 22.3398 C 7.9726 22.3398 7.3632 22.9258 7.3632 23.6289 C 7.3632 24.3320 7.9726 24.9649 8.6757 24.9649 Z M 13.7148 31.0118 C 14.4179 31.0118 15.0507 30.4258 15.0507 29.7227 C 15.0507 29.0196 14.4179 28.4102 13.7148 28.4102 L 8.6757 28.4102 C 7.9726 28.4102 7.3632 29.0196 7.3632 29.7227 C 7.3632 30.4258 7.9726 31.0118 8.6757 31.0118 Z" />
+                        </svg>
+                    </button>
+                    <button class="btn3" @click="central_show = ! central_show">
+                        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" x-show="central_show"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect width="18" height="18" rx="3" transform="matrix(-1 0 0 1 21 3)" stroke="#333333"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <line x1="1" y1="-1" x2="17" y2="-1" transform="matrix(4.37114e-08 1 1 -4.37114e-08 16 3)"
+                                stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <svg fill="#000000" width="40px" height="40px" viewBox="0 0 56 56" x-show="!central_show"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M 7.7148 49.5742 L 48.2852 49.5742 C 53.1836 49.5742 55.6446 47.1367 55.6446 42.3086 L 55.6446 13.6914 C 55.6446 8.8633 53.1836 6.4258 48.2852 6.4258 L 7.7148 6.4258 C 2.8398 6.4258 .3554 8.8398 .3554 13.6914 L .3554 42.3086 C .3554 47.1602 2.8398 49.5742 7.7148 49.5742 Z M 7.7851 45.8008 C 5.4413 45.8008 4.1288 44.5586 4.1288 42.1211 L 4.1288 13.8789 C 4.1288 11.4414 5.4413 10.1992 7.7851 10.1992 L 34.1523 10.1992 L 34.1523 45.8008 Z M 48.2147 10.1992 C 50.5350 10.1992 51.8708 11.4414 51.8708 13.8789 L 51.8708 42.1211 C 51.8708 44.5586 50.5350 45.8008 48.2147 45.8008 L 37.8319 45.8008 L 37.8319 10.1992 Z M 42.3319 18.8945 L 47.3478 18.8945 C 48.0740 18.8945 48.6836 18.2617 48.6836 17.5820 C 48.6836 16.8789 48.0740 16.2696 47.3478 16.2696 L 42.3319 16.2696 C 41.6288 16.2696 40.9960 16.8789 40.9960 17.5820 C 40.9960 18.2617 41.6288 18.8945 42.3319 18.8945 Z M 42.3319 24.9649 L 47.3478 24.9649 C 48.0740 24.9649 48.6836 24.3320 48.6836 23.6289 C 48.6836 22.9258 48.0740 22.3398 47.3478 22.3398 L 42.3319 22.3398 C 41.6288 22.3398 40.9960 22.9258 40.9960 23.6289 C 40.9960 24.3320 41.6288 24.9649 42.3319 24.9649 Z M 42.3319 31.0118 L 47.3478 31.0118 C 48.0740 31.0118 48.6836 30.4258 48.6836 29.7227 C 48.6836 29.0196 48.0740 28.4102 47.3478 28.4102 L 42.3319 28.4102 C 41.6288 28.4102 40.9960 29.0196 40.9960 29.7227 C 40.9960 30.4258 41.6288 31.0118 42.3319 31.0118 Z" />
+                        </svg>
+                    </button>
+
+                    <div x-show="!left_show">
+                        <span x-text="client">Hello</span>
+                    </div>
+                </div>
+            </div>
+            <div id="rlat" class="col-span-6 row-span-7 bg-indigo-200 rounded-3xl flex-col ">
+                <div class="flex flex-col h-144 border border-gray-300 rounded-lg">
+                    <table class="table-grille">
+                        <thead class="sticky  shadow-sm">
+                            <tr>
+                                <th scope="col">---</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Article</th>
+                                <th scope="col">Qte</th>
+                                <th scope="col">PU</th>
+                                <th scope="col">Montant</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="flex-1 overflow-y-auto">
+                        <table class="table-grille w-full">
+                        <tbody x-sort  x-ref="corps">
+                            <template x-for="nbre in 3">
+                                <tr :id="'rowid_'+nbre" x-sort:item class="sdk"
+                                    x-data="objline(nbre,'Article_______________________________'+nbre,1,800)" x-html="sstd"
+                                    x-init="updateTotaux(0,prix_u*quantite)">
+                                </tr>
+                            </template>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        <div class="col-span-10 bg-indigo-200 rounded-3xl flex justify-center items-center" x-text="status"></div>
+    </div>
+</div> <!-- load -->

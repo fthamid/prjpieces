@@ -1,0 +1,110 @@
+        
+    
+        
+:root {
+    --primary: rgb(97, 95, 104);
+    --primary-hover: rgb(139, 131, 163);
+    --font1: 'lobster',sans-serif;
+
+}
+
+.red { background-color: red;}
+.blue { background-color: blue;}
+.green { background-color: green;}
+.yellow { background-color: yellow;}
+.curColor {  background-color:rgb(35, 118, 206); }
+
+.bbox {
+    width:30px;  
+    height:30px; 
+    display:inline-block;
+    margin-inline: 1px;
+
+}
+h1 {
+    font-size: 4rem;
+    line-height: 1.2;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-family: var(--font1);
+}
+h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+}
+.button {
+    display:inline-flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    flex-shrink: 0; text-align: center; color: white; border-radius: 0.5rem;cursor: pointer; 
+    padding: 0.5rem; padding-left: 1rem; padding-right: 1rem;
+    font-weight: 700; box-shadow: 0 4px 3px rgba(94, 72, 72, 0.1);
+    transition-property: transform; transition-duration: 0.2s; 
+    background-color: var(--primary) ;
+}
+.button:hover { background-color: var(--primary-hover); }
+.button:active { transform: scale(0.95);}
+
+.menuItem {
+    display:inline-flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    flex-shrink: 0; text-align: center; color: white; border-radius: 0.5rem; cursor: pointer; 
+    padding: 0.5rem; padding-left: 1rem; padding-right: 1rem; margin-right: 0.25rem;
+    font-weight: 700; box-shadow: 0 4px 3px rgba(94, 72, 72, 0.1);
+    transition-property: transform; transition-duration: 0.2s; 
+    background-color: var(--primary) ;
+}
+.menuItem:hover { background-color: var(--primary-hover); cursor: pointer;}
+.menuItem:active { transform: scale(0.95);}
+
+
+.warning {
+     color: rgb(150, 26, 26);
+ }
+
+ .sodoko {
+     display: flex;
+     width: 280px;
+     height: 280px;
+     margin: 4px;
+     border: 2px solid rgb(8, 8, 124);
+     background: rgb(187, 204, 226);
+     justify-content: space-around;
+     align-items: center;
+     flex-wrap: wrap;
+ }
+
+ .box {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 60px;
+     height: 60px;
+     margin: 2px;
+     font-size: 40px;
+     background-color: rgb(115, 130, 179);
+     color: rgb(112, 104, 161);
+
+ }
+ tbody {
+    height: 200px;
+     overflow-y: auto;
+ } 
+
+ .oswald {
+            font-family: "Oswald", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+        }
+.card {
+    display: flex; flex-direction: column; overflow: hidden; position: relative; border-radius: 1rem; 
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); margin-bottom: 2rem; background-color: white;
+    padding-bottom: 1rem;
+}
+.font1 {  font-family: var(--font1); }
+
+ [x-cloak]  {  
+            display: none !important ;
+        }
+ 
+ 

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajx</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.12.4/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style type="text/tailwindcss" lang="postcss">
+        
+        .cbox {
+            @apply m-0.5 inline-block h-4 w-4 rounded-full;
+        }
+        
+        .navitems>li>a { 
+            @apply h-12 px-4 rounded-2xl hover:bg-gray-400 flex items-center gap-2;
+        }
+        .hvl>* { 
+            @apply  hover:bg-gray-200 rounded-2xl ; 
+        }
+        .hvl>*>a {
+            @apply p-2  flex items-center;
+        }
+        
+        .highlight { @apply !bg-indigo-100; }
+
+        h11 {
+            @apply font-medium text-blue-400 m-2;
+        }
+        .btn3 {
+            @apply  px-4 py-2 m-2 text-sm font-medium mt-2 text-blue-900 bg-blue-100 rounded-md cursor-pointer hover:bg-blue-400
+        }
+        .sdk {
+            @apply cursor-pointer hover:bg-blue-100 rounded-md odd:bg-gray-100 even:bg-white;
+        }
+        th {
+            @apply border border-gray-300;
+        }
+        .nbre {
+            @apply       p-2 border border-gray-200  text-right rounded-md ;
+        }
+        .article {
+            @apply w-104  p-2 border border-gray-200 rounded-md ;
+        }
+        .montant {    
+            @apply w-35 p-2 border border-gray-200 text-right rounded-md  ;
+        }
+        .prix {
+            @apply w-25 p-2 border border-gray-200 text-right rounded-md ;
+        }
+        .quantite {
+            @apply w-18 p-2 border border-gray-200 text-right rounded-md ;
+        }
+        .totaux {
+            @apply          border border-gray-200 text-right rounded-md ;
+        }
+        .table-grille {
+            @apply w-full font-normal bg-red-100 border-spacing-2 border-collapse border border-gray-400 rounded-3xl m-1;
+        }
+        .label {
+            @apply inline-block mb-2 text-gray-700;
+        }
+        .cl {
+            @apply block w-full px-3 py-1.5 text-base font-normal text-gray-700
+            bg-white bg-clip-padding border border-solid border-gray-400  rounded
+            transition ease-in-out m-0 focus:text-gray-700 focus:bg-white 
+            focus:border-blue-600 focus:outline-none ;
+        }
+        .entete-piece {
+            @apply  flex p-2 m-2 border-separate border-spacing-2 border-collapse border border-gray-200 rounded-md mb-2 ;
+        } 
+       
+    </style>
+</head>
+<!-- http://127.0.0.1:3000/ajx.html -->
+
+<body>
+     <header  x-data="{ mobilenavopen : false }" class="md:flex items-center justify-between 
+        [&>*]:px-8 bg-gray-400 h-20 text-white sticky top-0 z-50">
+        <div class="flex items-center justify-between h-20">
+            <logo> 
+                <a class="flex items-center gap-1" href="">
+                    <img class="h-8 -mt-1"
+                        src="https://img.icons8.com/?size=100&id=77241&format=png&color=ffffff" 
+                        alt="Production">
+                    <span class="text-lg font-bold">Unimatel</span>
+                </a>
+            </logo>
+            <mobileicon class="md:hidden">
+                <a @click="mobilenavopen = ! mobilenavopen" class="h-12 w-12 flex items-center justify-center cursor-pointer rounded-lg hover:bg-gray-700">
+                    <img x-show="mobilenavopen"  x-cloak class="w-6 h-6 select-none" 
+                       src="images/close.gif" alt="Fermer">
+                    <img x-show="!mobilenavopen" x-cloak class="w-6 h-6 select-none" 
+                      src="https://img.icons8.com/?size=100&id=120374&format=png&color=000000" alt="Menu">
+                </a>
+            </mobileicon>
+        </div>
+        <nav x-show="mobilenavopen" x-cloak class="md:!block bg-gray-400 w-screen h-screen md:h-auto md:w-auto -mt-20 md:mt-0">
+            <ul class="flex items-center navitems flex-col md:flex-row gap-8 md:gap-0 justify-center h-full translate-y-10 md:translate-0">
+                <li class="menuItem"><a href="/ajx.html">Accueil</a></li>
+                <li class="menuItem"><a href="">Produits</a></li>
+                <li class="menuItem"><a href="pindex.html" x-target="load">Clients</a></li>
+                <li class="menuItem"><a href="pieces.html" x-target="load">Pieces</a></li>
+                <li class="menuItem"><a href="test.html" x-target="load">Utilitaires</a></li>
+                <li class="menuItem"><a href="#"  @click.prevent="$refs.clts.submit()">Tests</a>
+                    <form x-ref="clts"  x-target="load" method="get" action="test.html" class="hidden">
+                        <button type="submit" class="hidden">Submit</button>
+                    </form>
+                    
+                </li>
+                
+                <li class="menuItem"><a href="/a-propos" x-target="load">A propos </a></li>
+                <li x-data="{ dropdownopen: false }" x-cloak  class="relative">
+                    <a class=" select-none cursor-pointer" @click="dropdownopen = ! dropdownopen " 
+                                @click.away=" dropdownopen = false " >
+                        <img  src="images/bart.jpg" class="h-7 w-7 rounded-full object-cover bg-blue-400" />
+                        Bart
+                        <img x-bind:class="dropdownopen ? 'rotate-180 duration-300':''" class="w-4" src="https://img.icons8.com/ios/64/expand-arrow--v1.png" alt="Utilisateurs"/>
+                    </a>
+                    <div x-show="dropdownopen" class="absolute right-0 text-black bg-white shadow rounded-lg w-40 p-2 z-20 " 
+                    x-transition:enter="duration-300 ease-out" 
+                    x-transition:enter-start="opacity-0 translate-y-0 translate-x-0 scale-90 " 
+                    x-transition:enter-end="opacity-100 translate-y-5 translate-x-5 scale-100" 
+                   
+                    >
+                        <ul class="hvl [&>li>a]:justify-end">
+                            <li><a href="http://" target="_blank" rel="noopener noreferrer">Mon Profil</a> </li>
+                            <li><a href="http://" target="_blank" rel="noopener noreferrer">Déconnexion</a> </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+        
+        </nav>
+    </header>
+    <hero  class="grid bg-gray-300 text-black text-center  bg-cover bg-center bg-[url('images/flikr-001.jpg')]">
+        
+    </hero>
+    <!--
+    <nav class="bg-gray-400  p-2">
+        <a href="pindex.html" class="btn3" x-target="load">Pièces</a>
+        <a href="pieces.html" class="btn3" x-target="load">Test</a>
+    </nav>
+    -->
+    <div x-data id="load">Contents. load...</div>
+</body>
+
+</html>
