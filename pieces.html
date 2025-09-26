@@ -1,8 +1,7 @@
-<div id="load" class="bg-blue-400" class="entete-piece" x-data="objentete(3, 0.00,0.00,0.00)">
-   
-    <div class="flex h-screen w-full items-center justify-center  p-4">
-        <div class="grid h-full w-full grid-cols-9 grid-rows-10 gap-4">
-            <div id="llat" x-show="left_show" class="col-span-2 row-span-8 bg-indigo-200 rounded-3xl flex-col justify-between items-center p-4">
+<div id="load" class="bg-gray-200" class="entete-piece" x-data="objentete(3, 0.00,0.00,0.00)">
+    <div class="flex h-screen w-full items-center justify-center  p-2">
+        <div class="grid h-full w-full grid-cols-13 grid-rows-11 gap-2">
+            <div id="llat" x-show="left_show" class="col-span-3 row-span-8 bg-indigo-200 rounded-3xl flex-col justify-between items-center p-4">
         <!-- <div id="llat" class="bg-gray-200 p-2 m-2 rounded-md" x-show="left_show"> -->
                 <div class="bg-gray-200 p-1 ">
                     <select id="typepiece" x-model="typepiece">
@@ -47,40 +46,53 @@
         <!--</div> llat -->
 
             </div>
-            <div id="clat" x-show="central_show" class=" row-span-8 bg-indigo-200 rounded-3xl flex-col justify-between items-center p-4">
-                <div class="bg-red-200 p-4 text-right">
-                    <label for="ht" class="form-label label font-bold">Total HT:</label>
-                    <input id="ht" name="ht" type="text" placeholder="HT" x-model.lazy="sht"
-                        class="cl bg-gray-200 p-4 text-right" readonly>
+         
+            <div id="rlat" class="col-span-9 row-span-8 bg-indigo-200 rounded-3xl flex-col ">
+                <div  class="flex flex-col h-164 border border-gray-300 rounded-lg p-2">
+                    <table class="table-grille" >
+                        <thead class="sticky  shadow-sm">
+                            <tr>
+                                <th class="col1" scope="col">--</th>
+                                <th class="col2" scope="col">ID</th>
+                                <th class="col3" scope="col">Article</th>
+                                <th class="col4" scope="col">Qte</th>
+                                <th class="col5" scope="col">PU</th>
+                                <th class="col6" scope="col">Montant</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="flex-1 overflow-y-auto" id="mcorps">
+                        <table class="table-grille w-full" >
+                            <tbody x-sort  x-ref="corps" id="corps">
+                                <template x-for="nbre in 3">
+                                    <tr :id="'rowid_'+nbre" x-sort:item class="sdk"
+                                        x-data="objline(nbre,'Article_______________________________'+nbre,1,800)" x-html="sstd"
+                                        x-init="updateTotaux(0,prix_u*quantite)">
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <table class="table-grille">
+                            <tfoot class="mb-4">
+                                <tr>
+                                    <td colspan="6"><br>
+                                        <hr>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                         </table>
+                    </div>
+                       
                 </div>
-                <div class="bg-red-200 p-4 text-right">
-                    <label for="tva" class="form-label label font-bold">TVA 20%:</label>
-                    <input id="tva" name="tva" type="text" placeholder="Tva" x-model.lazy="stva"
-                        class="cl bg-gray-200 p-4 text-right" readonly>
-                </div>
-                <div class=" bg-red-200 p-4 text-right">
-                    <label for="ttc" class="form-label label font-bold">TTC:</label>
-                    <input id="ttc" name="ttc" type="text" placeholder="TTC" x-model.lazy="sttc"
-                        class="cl bg-gray-200 p-4 text-right" readonly>
-                </div>
-                <div class="bg-red-200 p-4 text-right">
-                    <label for="remise" class="form-label label font-bold">Remise:</label>
-                    <input id="remise" name="remise" type="text" placeholder="Remise" x-model.lazy="remise"
-                        class="cl montant bg-red-500 p-4 text-right" x-init="$watch('lremise', () => updateNet())"
-                        x-mask:dynamic="$money($input,'.',' ',2)" />
-                </div>
-                <div class="bg-red-200 p-4 text-right">
-                    <label for="remise" class="form-label label font-bold">Net:</label>
-                    <input id="net" name="net" type="text" placeholder="Net" x-model.lazy="snet"
-                        class="cl bg-gray-200 p-4 text-right" readonly>
-                </div>
-            </div> <!-- clat -->
-            <div class="col-span-6 row-span-1 bg-indigo-200 rounded-3xl flex justify-center items-center" >
+            </div> <!-- rlat -->
+            <div class="row-span-8 bg-indigo-200 rounded-3xl flex justify-center " >
                  <div>
-                    <button class="btn3" @click="$refs.corps.appendChild(newrow())">
+                    <button class="btn3" @click="nouvelleligne();">
                         <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg" alt="Ajouter ligne">
-                            <g id="Edit / Table_Add">
+                            <g id="Table_Add">
                                 <path id="Vector"
                                     d="M11 4H15.8002C16.9203 4 17.4801 4 17.9079 4.21799C18.2842 4.40973 18.5905 4.71547 18.7822 5.0918C19 5.5192 19 6.07899 19 7.19691V9.0002L11.0001 9.0001M11 4H6.2002C5.08009 4 4.51962 4 4.0918 4.21799C3.71547 4.40973 3.40973 4.71547 3.21799 5.0918C3 5.51962 3 6.08009 3 7.2002V9M11 4L11.0001 9.0001M3 9V15M3 9L11.0001 9.0001M3 15V16.8002C3 17.9203 3 18.4801 3.21799 18.9079C3.40973 19.2842 3.71547 19.5905 4.0918 19.7822C4.5192 20 5.07899 20 6.19691 20H11.0002L11.0001 9.0001M3 15H11M15 16H18M18 16H21M18 16V19M18 16V13"
                                     stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -143,39 +155,83 @@
                     </div>
                 </div>
             </div>
-            <div id="rlat" class="col-span-6 row-span-7 bg-indigo-200 rounded-3xl flex-col justify-between">
-                 <div class="flex flex-col h-144 border border-gray-300 rounded-lg">
-                <table class="table-grille">
-                    <thead class="sticky top-0  shadow-sm">
-                        <tr>
-                            <th scope="col">---</th>
-                            <th scope="col">ID</th>
-                            <th scope="col">Article</th>
-                            <th scope="col">Qte</th>
-                            <th scope="col">PU</th>
-                            <th scope="col">Montant</th>
-                        </tr>
-                        
-                    </thead>
-                    <tbody x-sort class="scrollable-div h-96" x-ref="corps">
-                        <template x-for="nbre in 3">
-                            <tr :id="'rowid_'+nbre" x-sort:item class="sdk"
-                                x-data="objline(nbre,'Article_______________________________'+nbre,1,800)" x-html="sstd"
-                                x-init="updateTotaux(0,prix_u*quantite)">
-                            </tr>
-                        </template>
-                    </tbody>
-                    <tfoot class=" mb-4">
-                        <tr>
-                            <td colspan="6"><br>
-                                <hr>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-                </div>
+        <!-- </div> 
+            
+            <div class="col-span-3 row-span-2"></div>
+            <div class="flex-row col-span-9  row-span-2 rounded-3xl flex justify-center items-center">
+                <div class="bg-red-200 p-4 text-right">
+                        <label for="ht" class="form-label label font-bold">Total HT:</label>
+                        <input id="ht" name="ht" type="text" placeholder="HT" x-model.lazy="sht"
+                            class="cl bg-gray-200 p-4 text-right" readonly>
+                    </div>
+                    <div class="bg-red-200 p-4 text-right">
+                        <label for="tauxtva" class="form-label label font-bold">Taux de TVA:</label>
+                        <input id="tauxtva" name="tauxtva" type="text" placeholder="Taux de Tva en %" x-model.lazy="tauxtva"
+                            class="cl bg-gray-200 p-4 text-right"
+                            x-init="$watch('ltauxtva', () => updateNet())"
+                            x-mask:dynamic="$money($input,'.',' ',2)"
+                            >
+                    </div>
+                    <div class="bg-red-200 p-4 text-right">
+                        <label for="tva" class="form-label label font-bold">TVA:</label>
+                        <input id="tva" name="tva" type="text" placeholder="Tva" x-model.lazy="stva"
+                            class="cl bg-gray-200 p-4 text-right" readonly>
+                    </div>
+                    <div class=" bg-red-200 p-4 text-right">
+                        <label for="ttc" class="form-label label font-bold">TTC:</label>
+                        <input id="ttc" name="ttc" type="text" placeholder="TTC" x-model.lazy="sttc"
+                            class="cl bg-gray-200 p-4 text-right" readonly>
+                    </div>
+                    <div class="bg-red-200 p-4 text-right">
+                        <label for="remise" class="form-label label font-bold">Remise:</label>
+                        <input id="remise" name="remise" type="text" placeholder="Remise" x-model.lazy="remise"
+                            class="cl montant bg-red-500 p-4 text-right" x-init="$watch('lremise', () => updateNet())"
+                            x-mask:dynamic="$money($input,'.',' ',2)" />
+                    </div>
+                    <div class="bg-red-200 p-4 text-right">
+                        <label for="remise" class="form-label label font-bold">Net:</label>
+                        <input id="net" name="net" type="text" placeholder="Net" x-model.lazy="snet"
+                            class="cl bg-gray-200 p-4 text-right" readonly>
+                    </div>
+            </div> -->
+            <div x-show="!left_show" class="col-span-3 row-span-8 bg-indigo-200 rounded-3xl flex-col justify-between items-center p-4">
+
             </div>
-        </div>  
-        <div class="col-span-10 bg-indigo-200 rounded-3xl flex justify-center items-center" x-text="status"></div>
+            <div class="col-span-2 row-span-2 bg-red-200 rounded-3xl  text-center p-1">
+               <label for="ht" class="form-label label font-bold">Total HT:</label>
+                <input id="ht" name="ht" type="text" placeholder="HT" x-model.lazy="sht"
+                            class="cl bg-gray-200 p-2 text-right" readonly> 
+            </div>
+            <div class="col-span-2 row-span-2 bg-red-200 rounded-3xl  text-center p-1">
+               <label for="tauxtva" class="form-label label font-bold">Taux de TVA:</label>
+                <input id="tauxtva" name="tauxtva" type="text" placeholder="Taux de Tva en %" x-model.lazy="tauxtva"
+                        class="cl bg-gray-200 p-2 text-right"
+                        x-init="$watch('ltauxtva', () => updateNet())"
+                        x-mask:dynamic="$money($input,'.',' ',2)"
+                        > 
+            </div>
+            <div class="col-span-2 row-span-2 bg-red-200 rounded-3xl flex-row text-center p-1">
+                <label for="tva" class="form-label label font-bold">TVA:</label>
+                <input id="tva" name="tva" type="text" placeholder="Tva" x-model.lazy="stva"
+                        class="cl bg-gray-200 p-2 text-right" readonly>
+            </div>
+            <div class="col-span-2 row-span-2 bg-red-200 rounded-3xl flex-row text-center p-1">
+                <label for="ttc" class="form-label label font-bold">TTC:</label>
+                <input id="ttc" name="ttc" type="text" placeholder="TTC" x-model.lazy="sttc"
+                    class="cl bg-gray-200 p-2 text-right" readonly>
+            </div>
+            <div class="col-span-2 row-span-2 bg-red-200 rounded-3xl flex-row text-center p-1">
+                <label for="remise" class="form-label label font-bold">Remise:</label>
+                <input id="remise" name="remise" type="text" placeholder="Remise" x-model.lazy="remise"
+                    class="cl montant bg-red-500 p-2 text-right" x-init="$watch('lremise', () => updateNet())"
+                    x-mask:dynamic="$money($input,'.',' ',2)" />
+            </div>
+            <div class="col-span-2 row-span-2 bg-red-200 rounded-3xl flex-row text-center p-1">
+                <label for="remise" class="form-label label font-bold">Net:</label>
+                <input id="net" name="net" type="text" placeholder="Net" x-model.lazy="snet"
+                    class="cl bg-gray-200 p-2 text-right" readonly>
+            </div>
+
+        </div>
     </div>
 </div> <!-- load -->
