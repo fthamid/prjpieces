@@ -1,0 +1,160 @@
+<div class="bg-gray-200 entete-piece" x-data="objentete(3, 0.00,0.00,0.00)">
+    <div class="flex h-screen w-full items-center justify-center p-2">
+        <div class="grid h-full w-full grid-cols-13 grid-rows-11 gap-2">
+            <!-- Section gauche - Informations de la pièce -->
+            <div id="llat" x-show="left_show" class="col-span-3 row-span-8 bg-indigo-200 rounded-3xl flex-col justify-between items-center p-4">
+                <div class="bg-gray-200 p-1">
+                    <select id="typepiece" x-model="typepiece" class="w-full p-2 rounded">
+                        <option value="1">Devis</option>
+                        <option value="2">Bon de Livraison</option>
+                        <option value="3">Facture</option>
+                        <option value="4">Avoir</option>
+                    </select>
+                </div><br>
+
+                <div class="bg-gray-200 p-1">
+                    <label for="npiece" class="form-label label">Numéro:</label>
+                    <input id="npiece" name="npiece" type="text" placeholder="Numéro" x-model.lazy="npiece"
+                        class="form-control cl bg-gray-100 p-2 w-full">
+                </div>
+
+                <div class="bg-gray-200 p-1">
+                    <label for="datepiece" class="form-label label">Date:</label>
+                    <input id="datepiece" name="datepiece" type="date" placeholder="Date"
+                        class="form-control cl bg-gray-100 p-2 w-full">
+                </div>
+
+                <div class="bg-gray-200 p-1">
+                    <label for="client" class="form-label label">Client:</label>
+                    <input id="client" name="client" type="text" placeholder="Client" x-model.lazy="client"
+                        class="form-control cl bg-gray-100 p-2 w-full">
+                </div>
+
+                <div class="bg-gray-200 p-1">
+                    <label for="adresse" class="form-label label">Adresse:</label>
+                    <textarea cols="23" id="adresse" name="adresse" placeholder="Adresse" x-model.lazy="adresse"
+                        class="form-control cl bg-gray-100 p-2 w-full resize-none">
+                    </textarea>
+                </div>
+
+                <div class="bg-gray-200 p-1">
+                    <label for="ville" class="form-label label">Ville:</label>
+                    <input id="ville" name="ville" type="text" placeholder="Ville" x-model.lazy="ville"
+                        class="form-control cl bg-gray-100 p-2 w-full">
+                </div>
+
+                <div class="bg-gray-200 p-1">
+                    <label for="references" class="form-label label">Références:</label>
+                    <textarea cols="23" id="references" name="references" placeholder="Références"
+                        x-model.lazy="references" class="form-control cl bg-gray-100 p-2 w-full resize-none">
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Section centrale - Tableau des articles -->
+            <div id="rlat" class="col-span-9 row-span-8 bg-indigo-200 rounded-3xl flex-col">
+                <div class="flex flex-col h-164 border border-gray-300 rounded-lg p-2">
+                    <!-- En-tête du tableau -->
+                    <table class="table-grille">
+                        <thead class="sticky shadow-sm">
+                            <tr>
+                                <th class="col1" scope="col">--</th>
+                                <th class="col2" scope="col">ID</th>
+                                <th class="col3" scope="col">Article</th>
+                                <th class="col4" scope="col">Qté</th>
+                                <th class="col5" scope="col">PU</th>
+                                <th class="col6" scope="col">Montant</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <!-- Corps du tableau avec scroll -->
+                    <div class="flex-1 overflow-y-auto" id="mcorps">
+                        <table class="table-grille w-full">
+                            <tbody x-sort x-ref="corps" id="corps">
+                                <template x-for="nbre in 3">
+                                    <tr :id="'rowid_'+nbre" x-sort:item class="sdk"
+                                        x-data="objline(nbre,'Article_______________________________'+nbre,1,800)" x-html="sstd"
+                                        x-init="updateTotaux(0,prix_u*quantite)">
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pied du tableau avec totaux -->
+                    <div>
+                        <table class="table-grille">
+                            <tfoot class="mb-4">
+                                <tr>
+                                    <td colspan="6"><br><hr></td>
+                                </tr>
+                                <tr>
+                                    <td class="totaux" colspan="5">Total TTC:</td>
+                                    <td class="montant" x-text="sttc"></td>
+                                </tr>
+                                <tr>
+                                    <td class="totaux" colspan="5">TVA <span x-text="stauxtva"></span>%:</td>
+                                    <td class="montant" x-text="stva"></td>
+                                </tr>
+                                <tr>
+                                    <td class="totaux" colspan="5">Total HT:</td>
+                                    <td class="montant" x-text="sht"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section droite - Actions -->
+            <div class="row-span-8 bg-indigo-200 rounded-3xl flex flex-col justify-center items-center p-4">
+                <button class="btn3 mb-4" @click="nouvelleligne();" title="Ajouter une ligne">
+                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg" alt="Ajouter ligne">
+                        <g id="Table_Add">
+                            <path id="Vector"
+                                d="M11 4H15.8002C16.9203 4 17.4801 4 17.9079 4.21799C18.2842 4.40973 18.5905 4.71547 18.7822 5.0918C19 5.5192 19 6.07899 19 7.19691V9.0002L11.0001 9.0001M11 4H6.2002C5.08009 4 4.51962 4 4.0918 4.21799C3.71547 4.40973 3.40973 4.71547 3.21799 5.0918C3 5.51962 3 6.08009 3 7.2002V9M11 4L11.0001 9.0001M3 9V15M3 9L11.0001 9.0001M3 15V16.8002C3 17.9203 3 18.4801 3.21799 18.9079C3.40973 19.2842 3.71547 19.5905 4.0918 19.7822C4.5192 20 5.07899 20 6.19691 20H11.0002L11.0001 9.0001M3 15H11M15 16H18M18 16H21M18 16V19M18 16V13"
+                                stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </g>
+                    </svg>
+                    <span class="block text-xs mt-1">Ajouter</span>
+                </button>
+
+                <button class="btn3 mb-4" @click="alert('Fonction de sauvegarde à implémenter')" title="Sauvegarder">
+                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 21V13H7V21M7 7H13L17 11V7M5 3H19L21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="block text-xs mt-1">Sauver</span>
+                </button>
+
+                <button class="btn3 mb-4" @click="window.print()" title="Imprimer">
+                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 9V2H18V9M6 18H4C2.9 18 2 17.1 2 16V10C2 8.9 2.9 8 4 8H20C21.1 8 22 8.9 22 10V16C22 17.1 21.1 18 20 18H18M6 14H18V22H6V14Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="block text-xs mt-1">Imprimer</span>
+                </button>
+            </div>
+
+            <!-- Section bas - Paramètres -->
+            <div class="col-span-13 row-span-3 bg-gray-100 rounded-3xl p-4">
+                <div class="grid grid-cols-4 gap-4">
+                    <div>
+                        <label class="label">Taux TVA (%):</label>
+                        <input type="number" x-model.lazy="tauxtva" class="cl" step="0.01" min="0" max="100">
+                    </div>
+
+                    <div>
+                        <label class="label">Remise:</label>
+                        <input type="number" x-model.lazy="remise" class="cl" step="0.01" min="0">
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="label">Commentaires:</label>
+                        <textarea class="cl resize-none" rows="2" placeholder="Commentaires ou conditions particulières..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

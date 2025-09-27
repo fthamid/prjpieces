@@ -1,0 +1,287 @@
+<div class="container mx-auto px-4 py-8" x-data="{
+    produits: [
+        { id: 1, nom: 'Ordinateur Portable Pro', reference: 'ORD-001', prix: 1299.99, description: 'Ordinateur portable haute performance pour professionnels', categorie: 'Informatique', stock: 15 },
+        { id: 2, nom: 'Écran 24 pouces', reference: 'ECR-024', prix: 299.99, description: 'Écran LED 24 pouces Full HD', categorie: 'Informatique', stock: 8 },
+        { id: 3, nom: 'Clavier Sans Fil', reference: 'CLV-001', prix: 79.99, description: 'Clavier sans fil ergonomique', categorie: 'Accessoires', stock: 25 },
+        { id: 4, nom: 'Souris Optique', reference: 'SOU-001', prix: 29.99, description: 'Souris optique sans fil', categorie: 'Accessoires', stock: 30 },
+        { id: 5, nom: 'Tablette Graphique', reference: 'TAB-001', prix: 199.99, description: 'Tablette graphique professionnelle', categorie: 'Design', stock: 5 }
+    ],
+    categories: ['Informatique', 'Accessoires', 'Design', 'Audio', 'Réseau'],
+    selectedProduit: null,
+    searchTerm: '',
+    selectedCategory: '',
+    showForm: false,
+    newProduit: { nom: '', reference: '', prix: '', description: '', categorie: '', stock: '' },
+
+    get filteredProduits() {
+        let filtered = this.produits;
+
+        if (this.searchTerm) {
+            filtered = filtered.filter(produit =>
+                produit.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                produit.reference.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                produit.description.toLowerCase().includes(this.searchTerm.toLowerCase())
+            );
+        }
+
+        if (this.selectedCategory) {
+            filtered = filtered.filter(produit => produit.categorie === this.selectedCategory);
+        }
+
+        return filtered;
+    },
+
+    addProduit() {
+        if (this.newProduit.nom && this.newProduit.reference && this.newProduit.prix) {
+            this.produits.push({
+                id: this.produits.length + 1,
+                ...this.newProduit,
+                prix: parseFloat(this.newProduit.prix),
+                stock: parseInt(this.newProduit.stock) || 0
+            });
+            this.newProduit = { nom: '', reference: '', prix: '', description: '', categorie: '', stock: '' };
+            this.showForm = false;
+        }
+    },
+
+    editProduit(produit) {
+        this.selectedProduit = { ...produit };
+    },
+
+    updateProduit() {
+        const index = this.produits.findIndex(p => p.id === this.selectedProduit.id);
+        if (index !== -1) {
+            this.produits[index] = {
+                ...this.selectedProduit,
+                prix: parseFloat(this.selectedProduit.prix),
+                stock: parseInt(this.selectedProduit.stock) || 0
+            };
+            this.selectedProduit = null;
+        }
+    },
+
+    deleteProduit(produitId) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+            this.produits = this.produits.filter(p => p.id !== produitId);
+        }
+    },
+
+    getStockStatus(stock) {
+        if (stock === 0) return { class: 'bg-red-100 text-red-800', text: 'Rupture' };
+        if (stock < 10) return { class: 'bg-yellow-100 text-yellow-800', text: 'Stock faible' };
+        return { class: 'bg-green-100 text-green-800', text: 'En stock' };
+    }
+}">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Catalogue Produits</h1>
+        <button @click="showForm = true" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Nouveau Produit
+        </button>
+    </div>
+
+    <!-- Filtres -->
+    <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Recherche -->
+        <div class="relative">
+            <input
+                type="text"
+                x-model="searchTerm"
+                placeholder="Rechercher un produit (nom, référence, description)..."
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </div>
+
+        <!-- Filtre par catégorie -->
+        <div>
+            <select x-model="selectedCategory" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">Toutes les catégories</option>
+                <template x-for="categorie in categories" :key="categorie">
+                    <option x-text="categorie" :value="categorie"></option>
+                </template>
+            </select>
+        </div>
+    </div>
+
+    <!-- Liste des produits en mode grille -->
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <template x-for="produit in filteredProduits" :key="produit.id">
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1" x-text="produit.nom"></h3>
+                        <p class="text-sm text-gray-500" x-text="'Réf: ' + produit.reference"></p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button @click="editProduit(produit)" class="text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </button>
+                        <button @click="deleteProduit(produit.id)" class="text-red-600 hover:text-red-800">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <p class="text-sm text-gray-600" x-text="produit.description"></p>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600" x-text="produit.prix.toFixed(2) + ' €'"></span>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full"
+                              :class="getStockStatus(produit.stock).class"
+                              x-text="getStockStatus(produit.stock).text"></span>
+                    </div>
+
+                    <div class="flex justify-between items-center text-sm text-gray-500">
+                        <span x-text="'Catégorie: ' + produit.categorie"></span>
+                        <span x-text="'Stock: ' + produit.stock"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm">
+                        Ajouter au devis
+                    </button>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <!-- Message si aucun produit trouvé -->
+    <div x-show="filteredProduits.length === 0" class="text-center py-12">
+        <p class="text-gray-500 text-lg">Aucun produit trouvé</p>
+    </div>
+
+    <!-- Modal nouveau produit -->
+    <div x-show="showForm" x-cloak class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-900">Nouveau Produit</h3>
+                <button @click="showForm = false" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form @submit.prevent="addProduit()" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom du produit *</label>
+                        <input type="text" x-model="newProduit.nom" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Référence *</label>
+                        <input type="text" x-model="newProduit.reference" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Prix (€) *</label>
+                        <input type="number" x-model="newProduit.prix" step="0.01" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                        <input type="number" x-model="newProduit.stock" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                        <select x-model="newProduit.categorie" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Sélectionner une catégorie</option>
+                            <template x-for="categorie in categories" :key="categorie">
+                                <option x-text="categorie" :value="categorie"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea x-model="newProduit.description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" @click="showForm = false" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Annuler
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Ajouter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal édition produit -->
+    <div x-show="selectedProduit" x-cloak class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-900">Modifier Produit</h3>
+                <button @click="selectedProduit = null" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form @submit.prevent="updateProduit()" class="space-y-4" x-show="selectedProduit">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom du produit *</label>
+                        <input type="text" x-model="selectedProduit.nom" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Référence *</label>
+                        <input type="text" x-model="selectedProduit.reference" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Prix (€) *</label>
+                        <input type="number" x-model="selectedProduit.prix" step="0.01" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                        <input type="number" x-model="selectedProduit.stock" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                        <select x-model="selectedProduit.categorie" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Sélectionner une catégorie</option>
+                            <template x-for="categorie in categories" :key="categorie">
+                                <option x-text="categorie" :value="categorie"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea x-model="selectedProduit.description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" @click="selectedProduit = null" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Annuler
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Modifier
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

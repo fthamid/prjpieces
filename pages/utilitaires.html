@@ -1,0 +1,369 @@
+<div class="container mx-auto px-4 py-8" x-data="{
+    activeTab: 'calculatrice',
+    calculator: {
+        display: '0',
+        previousOperand: '',
+        operation: null,
+        waitingForNewOperand: false
+    },
+    converter: {
+        amount: '',
+        fromCurrency: 'EUR',
+        toCurrency: 'USD',
+        result: '',
+        rates: { EUR: 1, USD: 1.1, GBP: 0.86, JPY: 110 }
+    },
+    backup: {
+        status: 'idle',
+        lastBackup: null
+    },
+
+    // Calculatrice
+    inputNumber(num) {
+        if (this.calculator.waitingForNewOperand) {
+            this.calculator.display = num;
+            this.calculator.waitingForNewOperand = false;
+        } else {
+            this.calculator.display = this.calculator.display === '0' ? num : this.calculator.display + num;
+        }
+    },
+
+    inputOperation(nextOperation) {
+        const inputValue = parseFloat(this.calculator.display);
+
+        if (this.calculator.previousOperand === '') {
+            this.calculator.previousOperand = inputValue;
+        } else if (this.calculator.operation) {
+            const currentValue = this.calculator.previousOperand || 0;
+            const newValue = this.calculate(currentValue, inputValue, this.calculator.operation);
+
+            this.calculator.display = String(newValue);
+            this.calculator.previousOperand = newValue;
+        }
+
+        this.calculator.waitingForNewOperand = true;
+        this.calculator.operation = nextOperation;
+    },
+
+    calculate(firstOperand, secondOperand, operation) {
+        switch (operation) {
+            case '+': return firstOperand + secondOperand;
+            case '-': return firstOperand - secondOperand;
+            case '*': return firstOperand * secondOperand;
+            case '/': return firstOperand / secondOperand;
+            case '=': return secondOperand;
+            default: return secondOperand;
+        }
+    },
+
+    performCalculation() {
+        const inputValue = parseFloat(this.calculator.display);
+
+        if (this.calculator.previousOperand !== '' && this.calculator.operation) {
+            const newValue = this.calculate(this.calculator.previousOperand, inputValue, this.calculator.operation);
+            this.calculator.display = String(newValue);
+            this.calculator.previousOperand = '';
+            this.calculator.operation = null;
+            this.calculator.waitingForNewOperand = true;
+        }
+    },
+
+    clearCalculator() {
+        this.calculator.display = '0';
+        this.calculator.previousOperand = '';
+        this.calculator.operation = null;
+        this.calculator.waitingForNewOperand = false;
+    },
+
+    // Convertisseur
+    convertCurrency() {
+        if (this.converter.amount) {
+            const amount = parseFloat(this.converter.amount);
+            const fromRate = this.converter.rates[this.converter.fromCurrency];
+            const toRate = this.converter.rates[this.converter.toCurrency];
+            const result = (amount / fromRate) * toRate;
+            this.converter.result = result.toFixed(2) + ' ' + this.converter.toCurrency;
+        }
+    },
+
+    // Backup
+    performBackup() {
+        this.backup.status = 'running';
+
+        // Simulation d'une sauvegarde
+        setTimeout(() => {
+            this.backup.status = 'completed';
+            this.backup.lastBackup = new Date().toLocaleString('fr-FR');
+
+            setTimeout(() => {
+                this.backup.status = 'idle';
+            }, 3000);
+        }, 2000);
+    },
+
+    exportData() {
+        // Simulation d'export des données
+        const data = {
+            clients: 'Données clients...',
+            produits: 'Données produits...',
+            pieces: 'Données pièces commerciales...',
+            timestamp: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'export_unimatel_' + new Date().toISOString().split('T')[0] + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+}">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Utilitaires</h1>
+        <p class="text-gray-600">Outils pratiques pour faciliter votre travail quotidien</p>
+    </div>
+
+    <!-- Onglets -->
+    <div class="mb-8">
+        <nav class="flex space-x-8 border-b border-gray-200">
+            <button @click="activeTab = 'calculatrice'"
+                    :class="activeTab === 'calculatrice' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                Calculatrice
+            </button>
+            <button @click="activeTab = 'convertisseur'"
+                    :class="activeTab === 'convertisseur' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                Convertisseur
+            </button>
+            <button @click="activeTab = 'backup'"
+                    :class="activeTab === 'backup' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                Sauvegarde
+            </button>
+            <button @click="activeTab = 'systeme'"
+                    :class="activeTab === 'systeme' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                Système
+            </button>
+        </nav>
+    </div>
+
+    <!-- Contenu des onglets -->
+    <div class="mt-8">
+        <!-- Calculatrice -->
+        <div x-show="activeTab === 'calculatrice'" class="max-w-md mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">Calculatrice</h2>
+
+                <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                    <div class="text-right text-2xl font-mono" x-text="calculator.display"></div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2">
+                    <button @click="clearCalculator()" class="bg-red-500 text-white p-3 rounded hover:bg-red-600 col-span-2">C</button>
+                    <button @click="inputOperation('/')" class="bg-gray-500 text-white p-3 rounded hover:bg-gray-600">÷</button>
+                    <button @click="inputOperation('*')" class="bg-gray-500 text-white p-3 rounded hover:bg-gray-600">×</button>
+
+                    <button @click="inputNumber('7')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">7</button>
+                    <button @click="inputNumber('8')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">8</button>
+                    <button @click="inputNumber('9')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">9</button>
+                    <button @click="inputOperation('-')" class="bg-gray-500 text-white p-3 rounded hover:bg-gray-600">-</button>
+
+                    <button @click="inputNumber('4')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">4</button>
+                    <button @click="inputNumber('5')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">5</button>
+                    <button @click="inputNumber('6')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">6</button>
+                    <button @click="inputOperation('+')" class="bg-gray-500 text-white p-3 rounded hover:bg-gray-600">+</button>
+
+                    <button @click="inputNumber('1')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">1</button>
+                    <button @click="inputNumber('2')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">2</button>
+                    <button @click="inputNumber('3')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">3</button>
+                    <button @click="performCalculation()" class="bg-green-500 text-white p-3 rounded hover:bg-green-600 row-span-2">=</button>
+
+                    <button @click="inputNumber('0')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600 col-span-2">0</button>
+                    <button @click="inputNumber('.')" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600">.</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Convertisseur -->
+        <div x-show="activeTab === 'convertisseur'" class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Convertisseur de Devises</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Montant</label>
+                        <input type="number" x-model="converter.amount" @input="convertCurrency()"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="0.00">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">De</label>
+                        <select x-model="converter.fromCurrency" @change="convertCurrency()"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="EUR">EUR (Euro)</option>
+                            <option value="USD">USD (Dollar)</option>
+                            <option value="GBP">GBP (Livre)</option>
+                            <option value="JPY">JPY (Yen)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Vers</label>
+                        <select x-model="converter.toCurrency" @change="convertCurrency()"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="EUR">EUR (Euro)</option>
+                            <option value="USD">USD (Dollar)</option>
+                            <option value="GBP">GBP (Livre)</option>
+                            <option value="JPY">JPY (Yen)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div x-show="converter.result" class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <p class="text-center text-xl font-semibold text-blue-800">
+                        Résultat: <span x-text="converter.result"></span>
+                    </p>
+                </div>
+
+                <div class="mt-4 text-sm text-gray-500 text-center">
+                    <p>Taux de change indicatifs - Pour information uniquement</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sauvegarde -->
+        <div x-show="activeTab === 'backup'" class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Sauvegarde et Export</h2>
+
+                <div class="space-y-6">
+                    <!-- Sauvegarde -->
+                    <div class="border rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Sauvegarde des données</h3>
+                        <p class="text-gray-600 mb-4">Créez une sauvegarde de toutes vos données.</p>
+
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <button @click="performBackup()"
+                                        :disabled="backup.status === 'running'"
+                                        :class="backup.status === 'running' ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'"
+                                        class="text-white px-4 py-2 rounded-lg transition-colors">
+                                    <span x-show="backup.status === 'idle'">Créer une sauvegarde</span>
+                                    <span x-show="backup.status === 'running'">Sauvegarde en cours...</span>
+                                    <span x-show="backup.status === 'completed'">✓ Sauvegarde terminée</span>
+                                </button>
+                            </div>
+
+                            <div x-show="backup.lastBackup" class="text-sm text-gray-500">
+                                Dernière sauvegarde: <span x-text="backup.lastBackup"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export -->
+                    <div class="border rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Export des données</h3>
+                        <p class="text-gray-600 mb-4">Exportez vos données au format JSON pour utilisation externe.</p>
+
+                        <button @click="exportData()"
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Télécharger les données
+                        </button>
+                    </div>
+
+                    <!-- Import (simulé) -->
+                    <div class="border rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Import de données</h3>
+                        <p class="text-gray-600 mb-4">Importez des données depuis un fichier de sauvegarde.</p>
+
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-600">Glissez-déposez un fichier ou cliquez pour sélectionner</p>
+                            <button class="mt-2 bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+                                Sélectionner un fichier
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Système -->
+        <div x-show="activeTab === 'systeme'" class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Informations Système</h2>
+
+                <div class="space-y-6">
+                    <!-- Informations générales -->
+                    <div class="border rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Application</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Version:</span>
+                                <span class="font-medium">1.0.0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Dernière mise à jour:</span>
+                                <span class="font-medium">26 septembre 2024</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Environnement:</span>
+                                <span class="font-medium">Production</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistiques -->
+                    <div class="border rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Statistiques</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="bg-blue-50 p-3 rounded">
+                                <div class="text-blue-600 font-medium">Clients</div>
+                                <div class="text-2xl font-bold text-blue-800">3</div>
+                            </div>
+                            <div class="bg-green-50 p-3 rounded">
+                                <div class="text-green-600 font-medium">Produits</div>
+                                <div class="text-2xl font-bold text-green-800">5</div>
+                            </div>
+                            <div class="bg-purple-50 p-3 rounded">
+                                <div class="text-purple-600 font-medium">Pièces créées</div>
+                                <div class="text-2xl font-bold text-purple-800">12</div>
+                            </div>
+                            <div class="bg-yellow-50 p-3 rounded">
+                                <div class="text-yellow-600 font-medium">CA Total</div>
+                                <div class="text-2xl font-bold text-yellow-800">€15,420</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions de maintenance -->
+                    <div class="border rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">Maintenance</h3>
+                        <div class="space-y-3">
+                            <button class="w-full text-left p-3 border rounded hover:bg-gray-50 transition-colors">
+                                <div class="font-medium">Nettoyer le cache</div>
+                                <div class="text-sm text-gray-600">Supprime les fichiers temporaires</div>
+                            </button>
+                            <button class="w-full text-left p-3 border rounded hover:bg-gray-50 transition-colors">
+                                <div class="font-medium">Vérifier les mises à jour</div>
+                                <div class="text-sm text-gray-600">Recherche les nouvelles versions</div>
+                            </button>
+                            <button class="w-full text-left p-3 border rounded hover:bg-gray-50 transition-colors">
+                                <div class="font-medium">Optimiser la base de données</div>
+                                <div class="text-sm text-gray-600">Améliore les performances</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

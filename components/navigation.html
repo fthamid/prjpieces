@@ -1,0 +1,48 @@
+<header x-data="{ mobilenavopen : false }" class="md:flex items-center justify-between
+    [&>*]:px-8 bg-gray-400 h-20 text-white sticky top-0 z-50">
+    <div class="flex items-center justify-between h-20">
+        <logo>
+            <a class="flex items-center gap-1" href="/">
+                <img class="h-8 -mt-1"
+                    src="https://img.icons8.com/?size=100&id=77241&format=png&color=ffffff"
+                    alt="Production">
+                <span class="text-lg font-bold">Unimatel</span>
+            </a>
+        </logo>
+        <mobileicon class="md:hidden">
+            <a @click="mobilenavopen = ! mobilenavopen" class="h-12 w-12 flex items-center justify-center cursor-pointer rounded-lg hover:bg-gray-700">
+                <img x-show="mobilenavopen"  x-cloak class="w-6 h-6 select-none"
+                   src="https://img.icons8.com/?size=100&id=106&format=png&color=ffffff" alt="Fermer">
+                <img x-show="!mobilenavopen" x-cloak class="w-6 h-6 select-none"
+                  src="https://img.icons8.com/?size=100&id=120374&format=png&color=ffffff" alt="Menu">
+            </a>
+        </mobileicon>
+    </div>
+    <nav x-show="mobilenavopen" x-cloak class="md:!block bg-gray-400 w-screen h-screen md:h-auto md:w-auto -mt-20 md:mt-0">
+        <ul class="flex items-center navitems flex-col md:flex-row gap-8 md:gap-0 justify-center h-full translate-y-10 md:translate-0">
+            <li class="menuItem"><a href="/" x-target="main-content">Accueil</a></li>
+            <li class="menuItem"><a href="pages/produits.html" x-target="main-content">Produits</a></li>
+            <li class="menuItem"><a href="pages/clients.html" x-target="main-content">Clients</a></li>
+            <li class="menuItem"><a href="pages/pieces.html" x-target="main-content">Pièces</a></li>
+            <li class="menuItem"><a href="pages/utilitaires.html" x-target="main-content">Utilitaires</a></li>
+            <li class="menuItem"><a href="pages/apropos.html" x-target="main-content">À propos</a></li>
+            <li x-data="{ dropdownopen: false }" x-cloak  class="relative">
+                <a class=" select-none cursor-pointer" @click="dropdownopen = ! dropdownopen "
+                            @click.away=" dropdownopen = false " >
+                    <img  src="https://img.icons8.com/?size=100&id=7820&format=png&color=ffffff" class="h-7 w-7 rounded-full object-cover bg-blue-400" />
+                    Utilisateur
+                    <img x-bind:class="dropdownopen ? 'rotate-180 duration-300':''" class="w-4" src="https://img.icons8.com/ios/64/expand-arrow--v1.png" alt="Menu utilisateur"/>
+                </a>
+                <div x-show="dropdownopen" class="absolute right-0 text-black bg-white shadow rounded-lg w-40 p-2 z-20 "
+                x-transition:enter="duration-300 ease-out"
+                x-transition:enter-start="opacity-0 translate-y-0 translate-x-0 scale-90 "
+                x-transition:enter-end="opacity-100 translate-y-5 translate-x-5 scale-100">
+                    <ul class="hvl [&>li>a]:justify-end">
+                        <li><a href="pages/profil.html" x-target="main-content">Mon Profil</a></li>
+                        <li><a href="#" @click="alert('Fonction de déconnexion à implémenter')">Déconnexion</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</header>
