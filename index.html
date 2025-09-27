@@ -1,155 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pieces Commerciales</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Unimatel - Gestion Commerciale</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
 
+
+    <!-- Alpine.js Plugins -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.12.4/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- Custom Scripts and Styles -->
+    <script src="assets/js/index.js"></script>
+    <link rel="stylesheet" href="assets/css/styles.css">
 
-    <script src="index.js"></script>
-    <link rel="stylesheet" href="styles.css">
-    <style type="text/tailwindcss" lang="postcss">
-        h1 {
-            @apply font-medium text-blue-400 m-2;
-        }
-        .btn3 {
-            @apply  px-4 py-2 m-4 text-sm font-medium mt-8 text-blue-900 bg-blue-100 rounded-md cursor-pointer hover:bg-blue-400
-        }
-        .sdk {
-            @apply cursor-pointer hover:bg-blue-100 rounded-md odd:bg-gray-100 even:bg-white;
-        }
-        th {
-            @apply border border-gray-300;
-        }
-        .nbre {
-            @apply       p-2 border border-gray-200  text-right rounded-md ;
-        }
-        .article {
-            @apply w-86  p-2 border border-gray-200 rounded-md ;
-        }
-        .montant {    
-            @apply  w-35 p-2 border border-gray-200 text-right rounded-md  ;
-        }
-        .prix {
-            @apply w-25 p-2 border border-gray-200 text-right rounded-md ;
-        }
-        .quantite {
-            @apply w-18 p-2 border border-gray-200 text-right rounded-md ;
-        }
-        .totaux {
-            @apply          border border-gray-200 text-right rounded-md ;
-        }
-        .table-grille {
-            @apply border-separate border-spacing-2 border-collapse border border-gray-400 rounded-md;
-        }
-        .label {
-            @apply inline-block mb-2 text-gray-700;
-        }
-        .cl {
-            @apply block w-full px-3 py-1.5 text-base font-normal text-gray-700
-            bg-white bg-clip-padding border border-solid border-gray-400  rounded
-            transition ease-in-out m-0 focus:text-gray-700 focus:bg-white 
-            focus:border-blue-600 focus:outline-none ;
-        }
-        .entete-piece {
-            @apply w-183 p-2 border border-gray-200 rounded-md mb-3 ;
-        } 
-    </style>
 </head>
 
 <body>
-    <div x-data  class="w-183 m-8" >
-        <div class="entete-piece">
-            <form action="">
-                <div>
-                    <label for="npiece" class="form-label label">Num&egrave;ros:</label>
-                    <input id="npiece" name="npiece" type="text" placeholder="Numéro" class="form-control client">
-                    <select>
-                        <option value="1">Devis</option>
-                        <option value="2">Bon de Livraison</option>
-                        <option value="3">Facture</option>
-                        <option value="4">Avoir</option>
-                    </select>
-                    <input type="checkbox" name="piecevalide" id="piecevalide"> Valide
-                </div>
-                <div>
-                    <label for="datepiece" class="form-label label">Date:</label>
-                    <input id="datepiece" name="datepiece" type="date" placeholder="Date" class="form-control client">
-                </div>
-                <div>
-                    <label for="client" class="form-label label">Client:</label>
-                    <input id="client" name="client" type="text" placeholder="Client" class="form-control client">
-                </div>
-                <div>
-                    <label for="adresse" class="form-label label">Adresse:</label>
-                    <input id="adresse" name="adresse" type="text" placeholder="Adresse" class="form-control client">
-                </div>
-                <div>
-                    <label for="references" class="form-label label">References:</label><br>
-                    <textarea id="references" name="references" type="text" placeholder="References"
-                        class="form-control client ml-8">
-                    </textarea>
-                </div>
-            </form>
+    <header x-data="{ mobilenavopen : false }" class="main-header">
+        <div class="flex items-center justify-between h-20">
+            <logo>
+                <a class="flex items-center gap-1" href="/">
+                    <img class="h-8 -mt-1"
+                        src="https://img.icons8.com/?size=100&id=77241&format=png&color=ffffff"
+                        alt="Production">
+                    <span class="text-lg font-bold">Unimatel</span>
+                </a>
+            </logo>
+            <mobileicon class="md:hidden">
+                <a @click="mobilenavopen = ! mobilenavopen" class="h-12 w-12 flex items-center justify-center cursor-pointer rounded-lg hover:bg-gray-700">
+                    <img x-show="mobilenavopen"  x-cloak class="w-6 h-6 select-none"
+                       src="https://img.icons8.com/?size=100&id=106&format=png&color=ffffff" alt="Fermer">
+                    <img x-show="!mobilenavopen" x-cloak class="w-6 h-6 select-none"
+                      src="https://img.icons8.com/?size=100&id=120374&format=png&color=ffffff" alt="Menu">
+                </a>
+            </mobileicon>
         </div>
-        <table class="table-grille" x-data="objentete(3, 3000.00,600.00,3600.00)">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Article</th>
-                    <th scope="col">Qte</th>
-                    <th scope="col">PU</th>
-                    <th scope="col">Montant</th>
-                </tr>
-                <tr>
-                    <td colspan="5">
-                        <hr><br>
-                    </td>
-                </tr>
-            </thead>
-            <tbody x-sort class="mb-10 scrollable-div" x-ref="corps" >
-                <tr>
-                <td colspan="5">
-                    <button  @click="$refs.corps.appendChild(newrow())">Append</button>
-                </td>
-                </tr>
-                
-                <template x-for="nbre in 3">
-                    <tr x-sort:item class="sdk" x-data="objline(nbre,'Article______________________'+nbre,1,1000)"
-                        x-html="sstd"></tr>
-                   
-                </template>
-            </tbody>
-            <tfoot class=" mb-4">
-                <tr>
-                    <td colspan="5">
-                        <br>
-                        <hr>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="totaux" colspan="4">Total TTC:</td>
-                    <td class="montant" x-text="sttc"></td>
-                </tr>
-                <tr>
-                    <td class="totaux" colspan="4">TVA 20%:</td>
-                    <td class="montant" x-text="stva"></td>
-                </tr>
-                <tr>
-                    <td class="totaux" colspan="4">Total HT:</td>
-                    <td class="montant" x-text="sht"></td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+        <nav x-show="mobilenavopen" x-cloak class="md:!block bg-gray-400 w-screen h-screen md:h-auto md:w-auto -mt-20 md:mt-0">
+            <ul class="flex items-center navitems flex-col md:flex-row gap-8 md:gap-0 justify-center h-full translate-y-10 md:translate-0">
+                <li class="menuItem"><a href="/" x-target="main-content">Accueil</a></li>
+                <li class="menuItem"><a href="pages/produits.html" x-target="main-content">Produits</a></li>
+                <li class="menuItem"><a href="pages/clients.html" x-target="main-content">Clients</a></li>
+                <li class="menuItem"><a href="pieces-standalone.html">Pièces</a></li>
+                <li class="menuItem"><a href="pages/utilitaires.html" x-target="main-content">Utilitaires</a></li>
+                <li class="menuItem"><a href="pages/apropos.html" x-target="main-content">À propos</a></li>
+                <li x-data="{ dropdownopen: false }" x-cloak  class="relative">
+                    <a class=" select-none cursor-pointer" @click="dropdownopen = ! dropdownopen "
+                                @click.away=" dropdownopen = false " >
+                        <img  src="https://img.icons8.com/?size=100&id=7820&format=png&color=ffffff" class="h-7 w-7 rounded-full object-cover bg-blue-400" />
+                        Utilisateur
+                        <img x-bind:class="dropdownopen ? 'rotate-180 duration-300':''" class="w-4" src="https://img.icons8.com/ios/64/expand-arrow--v1.png" alt="Menu utilisateur"/>
+                    </a>
+                    <div x-show="dropdownopen" class="absolute right-0 text-black bg-white shadow rounded-lg w-40 p-2 z-20 "
+                    x-transition:enter="duration-300 ease-out"
+                    x-transition:enter-start="opacity-0 translate-y-0 translate-x-0 scale-90 "
+                    x-transition:enter-end="opacity-100 translate-y-5 translate-x-5 scale-100">
+                        <ul class="hvl [&>li>a]:justify-end">
+                            <li><a href="pages/profil.html" x-target="main-content">Mon Profil</a></li>
+                            <li><a href="#" @click="alert('Fonction de déconnexion à implémenter')">Déconnexion</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
 
+    <hero class="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-16">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl font-bold mb-4">Unimatel</h1>
+            <p class="text-xl mb-8">Solution de gestion commerciale moderne et intuitive</p>
+            <a href="pieces-standalone.html" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                Commencer
+            </a>
+        </div>
+    </hero>
 
+    <main id="main-content" class="container mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Gestion des Pièces</h2>
+                <p class="text-gray-600 mb-4">Créez et gérez vos devis, factures, bons de livraison et avoirs en quelques clics.</p>
+                <a href="pieces-standalone.html" class="text-blue-600 hover:underline">Accéder aux pièces →</a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Gestion Clients</h2>
+                <p class="text-gray-600 mb-4">Organisez vos contacts clients et suivez vos relations commerciales efficacement.</p>
+                <a href="pages/clients.html" x-target="main-content" class="text-blue-600 hover:underline">Gérer les clients →</a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Catalogue Produits</h2>
+                <p class="text-gray-600 mb-4">Maintenez votre catalogue produits à jour avec les prix et descriptions.</p>
+                <a href="pages/produits.html" x-target="main-content" class="text-blue-600 hover:underline">Voir les produits →</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 Unimatel. Tous droits réservés.</p>
+        </div>
+    </footer>
 </body>
-
 </html>

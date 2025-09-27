@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pièces Commerciales - Unimatel</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+
+    <!-- Alpine.js Plugins -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.12.4/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom Scripts and Styles -->
+    <script src="assets/js/index.js"></script>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <!-- Main Navigation -->
+    <header class="topbar no-print">
+        <div class="header-container">
+            <div class="header-content">
+                <!-- Logo and title -->
+                <div class="flex items-center">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon" >
+                            <img src="assets/images/unimatel-logo.png" alt="Unimatel Logo" class="logo-icon">
+                        </div> 
+                        <div class="logo-text">
+                            <h1>Unimatel</h1>
+                            <p>Pièces Commerciales</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Navigation buttons -->
+                <div class="header-nav">
+                    <a href="pages/clients.html" class="nav-btn">
+                        <span>👥</span>
+                        Clients
+                    </a>
+                    <a href="pages/produits.html" class="nav-btn">
+                        <span>📦</span>
+                        Produits
+                    </a>
+                    <a href="pieces-standalone.html" class="nav-btn nav-active">
+                        <span>📄</span>
+                        Pièces
+                    </a>
+                    <a href="pages/utilitaires.html" class="nav-btn">
+                        <span>🔧</span>
+                        Utilitaires
+                    </a>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="header-actions">
+                    <button class="btn-icon" title="Paramètres">
+                        <span class="text-xl">⚙️</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="main-container" x-data="objentete(3, 0.00,0.00,0.00)">
+        <div class="main-grid-fixed">
+            <!-- Extreme Left - Document type (narrow) -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="section-header">
+                            <span>📄</span>
+                            Type
+                        </h2>
+                    </div>
+                    <div class="card-content space-y-4">
+                        <div>
+                            <label class="label">Type de pièce</label>
+                            <select x-model="typepiece" class="select-field">
+                                <option value="1">Devis</option>
+                                <option value="2">Bon de Livraison</option>
+                                <option value="3">Facture</option>
+                                <option value="4">Avoir</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="label">Numéro</label>
+                                <input type="text" x-model.lazy="npiece" placeholder="Auto" class="input-field input-center input-mono">
+                            </div>
+                            <div>
+                                <label class="label">Date</label>
+                                <input type="date" x-model.lazy="datepiece" class="input-field">
+                            </div>
+                        </div>
+
+                        <div class="checkbox-row">
+                            <input type="checkbox" x-model="piecevalide" id="valid" class="checkbox">
+                            <label for="valid" class="checkbox-label">
+                                <span>✅</span>
+                                Validé
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content area - Articles taking most space -->
+            <div>
+                <!-- Articles table with integrated buttons -->
+                <div class="table-container">
+                    <div class="card-header">
+                        <div class="flex justify-between items-center">
+                            <h2 class="section-header">
+                                <span>🛍️</span>
+                                Articles et services
+                            </h2>
+                            <div class="flex items-center gap-3">
+                                <button @click="nouvelleligne(true)" class="btn btn-secondary btn-small">
+                                    <span class="text-lg">➕</span>
+                                    <span class="hidden sm-inline">Ajouter</span>
+                                </button>
+                                <button @click="alert('Fonction de sauvegarde à implémenter')" class="btn btn-success btn-small">
+                                    <span class="text-lg">💾</span>
+                                    <span class="hidden sm-inline">Sauver</span>
+                                </button>
+                                <button @click="imprimerPiece()" class="btn btn-primary btn-small">
+                                    <span class="text-lg">🖨️</span>
+                                    <span class="hidden sm-inline">Imprimer</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="table-modern">
+                            <thead>
+                                <tr>
+                                    <th class="col-delete"></th>
+                                    <th class="col-id">ID</th>
+                                    <th class="col-description">Description</th>
+                                    <th class="col-quantity">Quantité</th>
+                                    <th class="col-price">Prix Unitaire</th>
+                                    <th class="col-amount">Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody x-sort x-ref="corps" id="corps" class="divide-y divide-gray-100">
+                                <template x-for="nbre in 3" :key="nbre">
+                                    <tr :id="'rowid_'+nbre" x-sort:item class="row-hover"
+                                        x-data="objline(nbre,'Article professionnel '+nbre,1,250)" x-html="sstdEnhanced"
+                                        x-init="updateTotaux(0,prix_u*quantite)">
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Parameters - Full width directly below articles -->
+                <div class="card card-footer" style="margin-top: 1rem;">
+                    <div class="card-content">
+                        <div class="grid lg-grid-cols-3 gap-4">
+                            <div>
+                                <label class="label">TVA (%)</label>
+                                <input type="number" x-model.lazy="tauxtva" step="1" min="0" max="100" class="input-field input-center input-mono">
+                            </div>
+                            <div>
+                                <label class="label">Remise (€)</label>
+                                <input type="number" x-model.lazy="remise" step="1" min="0" class="input-field input-center input-mono">
+                            </div>
+                            <div>
+                                <label class="label">Conditions</label>
+                                <textarea rows="2" placeholder="Conditions particulières..." class="input-field textarea-field"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Totals - Below parameters -->
+                <div class="card card-footer" style="margin-top: 1rem;">
+                    <div class="card-content space-y-3">
+                        <div class="totals-row">
+                            <span class="totals-label">Articles:</span>
+                            <span class="totals-value" x-text="nbreArticles()"></span>
+                        </div>
+                        <div class="totals-row">
+                            <span class="totals-label">Total HT:</span>
+                            <span class="totals-value" x-text="sht + ' €'"></span>
+                        </div>
+                        <div class="totals-row">
+                            <span class="totals-label">TVA <span x-text="stauxtva"></span>%:</span>
+                            <span class="totals-value" x-text="stva + ' €'"></span>
+                        </div>
+                        <div x-show="lremise > 0" class="totals-row totals-discount">
+                            <span class="totals-label">Remise:</span>
+                            <span class="totals-value" x-text="'-' + sremise + ' €'"></span>
+                        </div>
+                        <div class="totals-highlight">
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-800 font-bold text-lg">Total TTC:</span>
+                                <span class="text-blue-900 font-bold text-xl" x-text="sttc + ' €'"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extreme Right - Client information (narrow) -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="section-header">
+                            <span>👤</span>
+                            Client
+                        </h2>
+                    </div>
+                    <div class="card-content space-y-4">
+                        <div>
+                            <label class="label">🏢 Nom</label>
+                            <input type="text" x-model.lazy="client" placeholder="Entreprise" class="input-field">
+                        </div>
+
+                        <div>
+                            <label class="label">📍 Adresse</label>
+                            <textarea x-model.lazy="adresse" rows="3" placeholder="Adresse complète" class="input-field textarea-field"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="label">🏙️ Ville</label>
+                            <input type="text" x-model.lazy="ville" placeholder="CP et ville" class="input-field">
+                        </div>
+
+                        <div>
+                            <label class="label">📝 Références</label>
+                            <textarea x-model.lazy="references" rows="3" placeholder="Références..." class="input-field textarea-field"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating total for mobile -->
+        <div class="mobile-total">
+            <div class="mobile-total-label">Total TTC</div>
+            <div class="mobile-total-value" x-text="sttc + ' €'"></div>
+        </div>
+    </div>
+</body>
+</html>

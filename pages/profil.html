@@ -1,0 +1,314 @@
+<div class="container mx-auto px-4 py-8" x-data="{
+    user: {
+        nom: 'Jean',
+        prenom: 'Dupont',
+        email: 'j.dupont@unimatel.fr',
+        telephone: '+33 1 23 45 67 89',
+        entreprise: 'Unimatel SARL',
+        poste: 'Directeur Commercial',
+        adresse: '123 Rue de la Paix',
+        ville: 'Paris',
+        codePostal: '75001',
+        pays: 'France'
+    },
+    preferences: {
+        langue: 'fr',
+        devise: 'EUR',
+        tauxTva: 20,
+        formatDate: 'dd/mm/yyyy',
+        notifications: true,
+        theme: 'clair'
+    },
+    activeTab: 'profil',
+    isEditing: false,
+
+    saveProfile() {
+        this.isEditing = false;
+        // Simulation de sauvegarde
+        alert('Profil mis à jour avec succès !');
+    },
+
+    savePreferences() {
+        // Simulation de sauvegarde des préférences
+        alert('Préférences sauvegardées !');
+    }
+}">
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Mon Profil</h1>
+            <p class="text-gray-600">Gérez vos informations personnelles et préférences</p>
+        </div>
+
+        <!-- Onglets -->
+        <div class="mb-8">
+            <nav class="flex space-x-8 border-b border-gray-200">
+                <button @click="activeTab = 'profil'"
+                        :class="activeTab === 'profil' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    Informations Personnelles
+                </button>
+                <button @click="activeTab = 'preferences'"
+                        :class="activeTab === 'preferences' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    Préférences
+                </button>
+                <button @click="activeTab = 'securite'"
+                        :class="activeTab === 'securite' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    Sécurité
+                </button>
+            </nav>
+        </div>
+
+        <!-- Contenu des onglets -->
+        <div class="bg-white rounded-lg shadow-md">
+            <!-- Profil -->
+            <div x-show="activeTab === 'profil'" class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Informations Personnelles</h2>
+                    <button @click="isEditing = !isEditing"
+                            :class="isEditing ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'"
+                            class="text-white px-4 py-2 rounded-lg transition-colors">
+                        <span x-show="!isEditing">Modifier</span>
+                        <span x-show="isEditing">Annuler</span>
+                    </button>
+                </div>
+
+                <form @submit.prevent="saveProfile()">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Photo de profil -->
+                        <div class="md:col-span-2 flex items-center space-x-6">
+                            <img class="h-20 w-20 rounded-full object-cover bg-gray-300"
+                                 src="https://img.icons8.com/?size=100&id=7820&format=png&color=000000"
+                                 alt="Photo de profil">
+                            <div x-show="isEditing">
+                                <button type="button" class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+                                    Changer la photo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Nom -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                            <input type="text" x-model="user.nom" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Prénom -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                            <input type="text" x-model="user.prenom" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" x-model="user.email" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Téléphone -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                            <input type="tel" x-model="user.telephone" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Entreprise -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Entreprise</label>
+                            <input type="text" x-model="user.entreprise" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Poste -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Poste</label>
+                            <input type="text" x-model="user.poste" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Adresse -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                            <input type="text" x-model="user.adresse" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Ville -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+                            <input type="text" x-model="user.ville" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Code postal -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Code postal</label>
+                            <input type="text" x-model="user.codePostal" :readonly="!isEditing"
+                                   :class="isEditing ? 'bg-white' : 'bg-gray-50'"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <div x-show="isEditing" class="mt-6 flex justify-end">
+                        <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Sauvegarder
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Préférences -->
+            <div x-show="activeTab === 'preferences'" class="p-8">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Préférences</h2>
+
+                <form @submit.prevent="savePreferences()">
+                    <div class="space-y-6">
+                        <!-- Interface -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Interface</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Langue</label>
+                                    <select x-model="preferences.langue" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="fr">Français</option>
+                                        <option value="en">English</option>
+                                        <option value="es">Español</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Thème</label>
+                                    <select x-model="preferences.theme" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="clair">Clair</option>
+                                        <option value="sombre">Sombre</option>
+                                        <option value="auto">Automatique</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Commercial -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Paramètres commerciaux</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Devise par défaut</label>
+                                    <select x-model="preferences.devise" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="USD">USD ($)</option>
+                                        <option value="GBP">GBP (£)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Taux TVA (%)</label>
+                                    <input type="number" x-model="preferences.tauxTva" step="0.01" min="0" max="100"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Format de date</label>
+                                    <select x-model="preferences.formatDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="dd/mm/yyyy">dd/mm/yyyy</option>
+                                        <option value="mm/dd/yyyy">mm/dd/yyyy</option>
+                                        <option value="yyyy-mm-dd">yyyy-mm-dd</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Notifications</h3>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" x-model="preferences.notifications" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="ml-2 text-sm text-gray-700">Recevoir les notifications par email</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end">
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            Sauvegarder les préférences
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Sécurité -->
+            <div x-show="activeTab === 'securite'" class="p-8">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Sécurité</h2>
+
+                <div class="space-y-8">
+                    <!-- Changement de mot de passe -->
+                    <div class="border rounded-lg p-6">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">Changer le mot de passe</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
+                                <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
+                                <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le nouveau mot de passe</label>
+                                <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Changer le mot de passe
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Sessions actives -->
+                    <div class="border rounded-lg p-6">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">Sessions actives</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                <div>
+                                    <p class="font-medium">Session actuelle</p>
+                                    <p class="text-sm text-gray-600">Chrome sur Windows • IP: 192.168.1.100</p>
+                                    <p class="text-sm text-gray-500">Dernière activité: Maintenant</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">Actuelle</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                <div>
+                                    <p class="font-medium">Session mobile</p>
+                                    <p class="text-sm text-gray-600">Safari sur iPhone • IP: 192.168.1.150</p>
+                                    <p class="text-sm text-gray-500">Dernière activité: Il y a 2 heures</p>
+                                </div>
+                                <button class="text-red-600 hover:text-red-800 text-sm">Déconnecter</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Authentification à deux facteurs -->
+                    <div class="border rounded-lg p-6">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">Authentification à deux facteurs</h3>
+                        <p class="text-gray-600 mb-4">Ajoutez une couche de sécurité supplémentaire à votre compte.</p>
+                        <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Activer l'A2F
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
